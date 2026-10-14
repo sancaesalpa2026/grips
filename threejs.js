@@ -578,7 +578,7 @@ on(window, 'mouseup touchend', () => { if (!swipe.holding) return; setTimeout(()
 // #endregion Swipe
 
 // #region Mobile Paging
-const paging = { startX: 0, startY: 0, anchor: 0, axis: 0, active: false, threshold: 24, lastSnap: 7 };
+const paging = { startX: 0, startY: 0, anchor: 0, axis: 0, active: false, threshold: 24, lastSnap: 5 };
 const isMobile = () => window.innerWidth < 1024;
 on(window, 'touchstart', (e) => { if (!isMobile() || pointer.prevent) return; paging.startX = e.touches[0].clientX; paging.startY = e.touches[0].clientY; paging.axis = 0; paging.anchor = closest(section.items, scroll.position, (item) => item.top).index; paging.active = paging.anchor <= paging.lastSnap; });
 window.addEventListener('touchmove', (e) => { if (!isMobile() || pointer.prevent || !paging.active) return; const x = e.touches[0].clientX; const y = e.touches[0].clientY; if (paging.axis === 0) { const dx = Math.abs(x - paging.startX); const dy = Math.abs(y - paging.startY); if (dx > 2 || dy > 2) paging.axis = dx > dy ? 1 : 2; } if (paging.axis === 2) { e.preventDefault(); lenis.stop(); } }, { passive: false });
@@ -587,8 +587,8 @@ on(window, 'touchend', (e) => { if (!isMobile() || pointer.prevent || !paging.ac
 
 // #region Desktop Paging
 const ENABLE_DESKTOP_PAGING = true;
-const wheelPager = { locked: false, lastSnap: 6, durationSlow: 1.5, durationFast: 1, slowIndexes: [0, 1, 5, 6], cooldown: 0 };
-let wheelTimer;
+const wheelPager = { locked: false, lastSnap: 5, durationSlow: 1.5, durationFast: 1, slowIndexes: [0, 1, 5, 6], cooldown: 0 }
+;let wheelTimer;
 window.addEventListener('wheel', (e) => { if (!ENABLE_DESKTOP_PAGING || pointer.prevent) return; const anchor = closest(section.items, scroll.position, (item) => item.top).index; if (anchor > wheelPager.lastSnap) return; e.preventDefault(); if (wheelPager.locked) return; if (Math.abs(e.deltaY) < 4) return; const dir = e.deltaY > 0 ? 1 : -1; const target = clamp(anchor + dir, 0, section.items.length - 1); if (target === anchor) return; const duration = wheelPager.slowIndexes.includes(anchor) ? wheelPager.durationSlow : wheelPager.durationFast; wheelPager.locked = true; scroll.to(section.items[target].top, { duration, lock: true, easing: (t) => 1 - Math.pow(1 - t, 3) }); clearTimeout(wheelTimer); wheelTimer = setTimeout(() => (wheelPager.locked = false), duration * 1000 + wheelPager.cooldown); }, { passive: false });
 // #endregion Desktop Paging
 
