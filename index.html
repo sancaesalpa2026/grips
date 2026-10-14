@@ -443,27 +443,51 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="https://cdn.prod.website-files.com/gsap/3.15.0/ScrollTrigger.min.js"></script>
 <script src="https://cdn.prod.website-files.com/gsap/3.15.0/SplitText.min.js"></script>
 <script>gsap.registerPlugin(ScrollTrigger,SplitText);</script><script id="grips-topics-js">
+<script id="grips-topics-js">
 (function(){
   if(!window.gsap||!window.ScrollTrigger)return;
-  var sections=document.querySelectorAll('[data-topics]');
+
+  // 🔧 SUbe este número para que el scroll sea MÁS LENTO.
+  //    Antes: 90  |  Ahora: 220 (≈2.4x más lento)
+  var SVH_PER_PANEL = 220;
+
+  var sections = document.querySelectorAll('[data-topics]');
   sections.forEach(function(sec){
-    var stage=sec.querySelector('.gt_stage'); if(!stage)return;
-    var panels=Array.prototype.slice.call(stage.querySelectorAll('.gt_panel')), n=panels.length, cur=-1;
-    sec.style.setProperty('--gt-n',n);
-    gsap.set(stage,{autoAlpha:0}); gsap.set(panels,{autoAlpha:0,y:24});
-    var show=function(i){
-      if(i===cur)return;
-      if(cur>=0)gsap.to(panels[cur],{autoAlpha:0,y:-24,duration:.35,ease:'power2.in',overwrite:true});
-      cur=i;
-      if(i>=0)gsap.fromTo(panels[i],{autoAlpha:0,y:24},{autoAlpha:1,y:0,duration:.6,delay:.2,ease:'power3.out',overwrite:true});
+    var stage = sec.querySelector('.gt_stage'); if(!stage) return;
+    var panels = Array.prototype.slice.call(stage.querySelectorAll('.gt_panel'));
+    var n = panels.length, cur = -1;
+
+    sec.style.setProperty('--gt-n', n);
+    // Forzamos la altura real en función del nuevo valor
+    sec.style.minHeight = (n * SVH_PER_PANEL) + 'svh';
+
+    gsap.set(stage, {autoAlpha:0});
+    gsap.set(panels, {autoAlpha:0, y:24});
+
+    var show = function(i){
+      if(i === cur) return;
+      if(cur >= 0) gsap.to(panels[cur], {autoAlpha:0, y:-24, duration:.35, ease:'power2.in', overwrite:true});
+      cur = i;
+      if(i >= 0) gsap.fromTo(panels[i], {autoAlpha:0, y:24}, {autoAlpha:1, y:0, duration:.6, delay:.2, ease:'power3.out', overwrite:true});
     };
+
     ScrollTrigger.create({
-      trigger:sec,start:'top 55%',end:'bottom 45%',
-      onToggle:function(self){gsap.to(stage,{autoAlpha:self.isActive?1:0,duration:.4,overwrite:true}); if(!self.isActive)show(-1);},
-      onUpdate:function(self){show(Math.min(n-1,Math.floor(self.progress*n)));}
+      trigger: sec,
+      start: 'top 55%',
+      end:   'bottom 45%',
+      onToggle: function(self){
+        gsap.to(stage, {autoAlpha: self.isActive ? 1 : 0, duration:.4, overwrite:true});
+        if(!self.isActive) show(-1);
+      },
+      onUpdate: function(self){
+        // progress va de 0→1 durante TODA la sección.
+        // Cada panel recibe 1/n del recorrido total.
+        show(Math.min(n - 1, Math.floor(self.progress * n)));
+      }
     });
   });
-  window.addEventListener('load',function(){ScrollTrigger.refresh();});
+
+  window.addEventListener('load', function(){ ScrollTrigger.refresh(); });
 })();
 </script>
 </body></html>
