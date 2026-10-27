@@ -49,12 +49,6 @@
   content:'';position:absolute;inset:0;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-.intro_corners{position:absolute;inset:1.5rem;pointer-events:none;z-index:2}
-.intro_corner{position:absolute;width:1rem;height:1rem;border-style:solid;border-width:0;border-color:rgba(255,255,255,.2)}
-.intro_corner--tl{top:0;left:0;border-top-width:1px;border-left-width:1px}
-.intro_corner--tr{top:0;right:0;border-top-width:1px;border-right-width:1px}
-.intro_corner--bl{bottom:0;left:0;border-bottom-width:1px;border-left-width:1px}
-.intro_corner--br{bottom:0;right:0;border-bottom-width:1px;border-right-width:1px}
 .intro_content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;padding:2rem 1.5rem;max-width:640px;width:100%}
 .intro_eyebrow{font-size:.7rem;font-weight:500;letter-spacing:.32em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:clamp(1.5rem,3vw,2.5rem);display:block}
 .intro_logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(4.5rem,18vw,12rem);letter-spacing:-.05em;line-height:.85;margin:0;color:#f5f5f5}
@@ -71,7 +65,6 @@
 .intro_meta{position:absolute;bottom:2rem;left:2rem;right:2rem;display:flex;justify-content:space-between;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);z-index:2;pointer-events:none}
 @media(max-width:600px){
   .intro_meta{flex-direction:column;gap:.5rem;align-items:center;text-align:center}
-  .intro_corners{inset:1rem}
   .intro_enter{padding:1rem 2.5rem;font-size:.75rem}
 }
 </style>
@@ -85,12 +78,6 @@
 
 <!-- LOADER / INTRO -->
 <div class="loader" id="grips-intro">
-  <div class="intro_corners">
-    <span class="intro_corner intro_corner--tl"></span>
-    <span class="intro_corner intro_corner--tr"></span>
-    <span class="intro_corner intro_corner--bl"></span>
-    <span class="intro_corner intro_corner--br"></span>
-  </div>
   <div class="intro_content">
     <span class="intro_eyebrow">Grips · Proteína de grillo</span>
     <h1 class="intro_logo">GRIPS</h1>
