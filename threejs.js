@@ -1,4 +1,4 @@
-﻿import Lenis from 'https://unpkg.com/lenis@1.3.23/dist/lenis.mjs';
+import Lenis from 'https://unpkg.com/lenis@1.3.23/dist/lenis.mjs';
 import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -373,10 +373,9 @@ loader.play = async () => {
 // #endregion Loader
 
 // #region PARAMS
+// Valores estáticos para el posicionamiento 3D. (Se mantienen para que los modelos no desaparezcan).
 const debugFront = { posX: 0.000, posY: 0.200, posZ: 0.000, rotX: -1.310, rotY: 3.140, rotZ: -1.590, scale: 4.200 };
 const debugBack  = { posX: 0.000, posY: 0.270, posZ: 1.520, rotX: 1.630, rotY: -1.460, rotZ: 1.550, scale: 4.200 };
-
-let currentTargetTab = 'front';
 // #endregion PARAMS
 
 // #region Animation
@@ -605,116 +604,3 @@ const indicator = { el: document.querySelector('.scroll_indicator'), set: null }
 if (indicator.el) { gsap.set(indicator.el, { '--p': 0 }); indicator.set = gsap.quickTo(indicator.el, '--p', { duration: 0.3, ease: 'power3.out' }); lenis.on('scroll', () => { const max = lenis.dimensions.scrollHeight - lenis.dimensions.height; const progress = max > 0 ? scroll.position / max : 0; indicator.set(progress); }); }
 window.dispatchEvent(new CustomEvent('carousel:ready', { detail: carousel }));
 // #endregion Scroll Indicator
-
-// #region DEBUG GUI
-const style = document.createElement('style');
-style.textContent = `
-#grips-panel{position:fixed;top:20px;right:20px;width:330px;background:rgba(18,18,22,.95);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.6);color:#fff;font-family:ui-sans-serif,-apple-system,'Segoe UI',sans-serif;font-size:13px;z-index:99999;overflow:hidden;user-select:none}
-#grips-panel *{box-sizing:border-box;margin:0;padding:0}
-#grips-panel .gp-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
-#grips-panel .gp-title{font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px}
-#grips-panel .gp-title::before{content:'';width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#7c5cff,#00d4ff);box-shadow:0 0 10px rgba(124,92,255,.7)}
-#grips-panel .gp-min{background:rgba(255,255,255,.06);border:0;color:#fff;width:24px;height:24px;border-radius:6px;cursor:pointer}
-#grips-panel .gp-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.25)}
-#grips-panel .gp-tab{flex:1;padding:9px 6px;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;cursor:pointer;color:rgba(255,255,255,.45);transition:all .2s;border:none;background:none}
-#grips-panel .gp-tab.active{color:#fff;background:rgba(124,92,255,.2);border-bottom:2px solid #7c5cff}
-#grips-panel.collapsed .gp-body,#grips-panel.collapsed .gp-footer,#grips-panel.collapsed .gp-tabs{display:none}
-#grips-panel .gp-body{padding:14px 16px;max-height:65vh;overflow-y:auto}
-#grips-panel .gp-group{margin-bottom:14px}
-#grips-panel .gp-group-title{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.35);margin-bottom:8px;font-weight:700}
-#grips-panel .gp-row{display:grid;grid-template-columns:22px 1fr 48px;align-items:center;gap:8px;margin-bottom:6px}
-#grips-panel .gp-row label{font-size:11px;color:rgba(255,255,255,.5);font-weight:600}
-#grips-panel .gp-row .gp-val{font-size:11px;color:rgba(255,255,255,.85);text-align:right;font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace}
-#grips-panel input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:2px;outline:none;cursor:pointer}
-#grips-panel input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:linear-gradient(135deg,#7c5cff,#00d4ff);cursor:pointer}
-#grips-panel .gp-footer{padding:10px 16px;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:8px}
-#grips-panel .gp-btn{flex:1;padding:8px 10px;border:0;border-radius:8px;background:rgba(255,255,255,.06);color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
-#grips-panel .gp-btn.primary{background:linear-gradient(135deg,#7c5cff,#00d4ff)}
-`;
-document.head.appendChild(style);
-
-const panel = document.createElement('div');
-panel.id = 'grips-panel';
-panel.innerHTML = `
-  <div class="gp-header">
-    <div class="gp-title">Ajustes Grips</div>
-    <button class="gp-min">−</button>
-  </div>
-  <div class="gp-tabs">
-    <button class="gp-tab active" data-tab="front">Carrusel (Frente)</button>
-    <button class="gp-tab" data-tab="back">Detalle (Atrás)</button>
-  </div>
-  <div class="gp-body">
-    <div class="gp-group">
-      <div class="gp-group-title">Posición</div>
-      <div class="gp-row"><label>X</label><input type="range" data-key="posX" min="-5" max="5" step="0.01"><span class="gp-val">0.00</span></div>
-      <div class="gp-row"><label>Y</label><input type="range" data-key="posY" min="-5" max="5" step="0.01"><span class="gp-val">0.00</span></div>
-      <div class="gp-row"><label>Z</label><input type="range" data-key="posZ" min="-5" max="5" step="0.01"><span class="gp-val">0.00</span></div>
-    </div>
-    <div class="gp-group">
-      <div class="gp-group-title">Rotación</div>
-      <div class="gp-row"><label>X</label><input type="range" data-key="rotX" min="-3.14" max="3.14" step="0.01"><span class="gp-val">0.00</span></div>
-      <div class="gp-row"><label>Y</label><input type="range" data-key="rotY" min="-3.14" max="3.14" step="0.01"><span class="gp-val">0.00</span></div>
-      <div class="gp-row"><label>Z</label><input type="range" data-key="rotZ" min="-3.14" max="3.14" step="0.01"><span class="gp-val">0.00</span></div>
-    </div>
-    <div class="gp-group">
-      <div class="gp-group-title">Escala</div>
-      <div class="gp-row"><label>—</label><input type="range" data-key="scale" min="0.1" max="10" step="0.05"><span class="gp-val">0.00</span></div>
-    </div>
-  </div>
-  <div class="gp-footer">
-    <button class="gp-btn" data-action="reset">Reset</button>
-    <button class="gp-btn primary" data-action="copy">Copiar valores</button>
-  </div>
-`;
-document.body.appendChild(panel);
-
-const updatePanelUI = () => {
-  const currentObj = currentTargetTab === 'front' ? debugFront : debugBack;
-  panel.querySelectorAll('input[type=range]').forEach((inp) => {
-    const key = inp.dataset.key;
-    inp.value = currentObj[key];
-    inp.nextElementSibling.textContent = currentObj[key].toFixed(2);
-  });
-};
-updatePanelUI();
-
-panel.querySelectorAll('.gp-tab').forEach((tabBtn) => {
-  tabBtn.addEventListener('click', (e) => {
-    panel.querySelectorAll('.gp-tab').forEach((b) => b.classList.remove('active'));
-    tabBtn.classList.add('active');
-    currentTargetTab = tabBtn.dataset.tab;
-    updatePanelUI();
-  });
-});
-
-panel.querySelectorAll('input[type=range]').forEach((inp) => {
-  inp.addEventListener('input', (e) => {
-    const val = parseFloat(e.target.value);
-    const key = e.target.dataset.key;
-    const currentObj = currentTargetTab === 'front' ? debugFront : debugBack;
-    currentObj[key] = val;
-    e.target.nextElementSibling.textContent = val.toFixed(2);
-  });
-});
-
-panel.querySelector('.gp-min').addEventListener('click', () => panel.classList.toggle('collapsed'));
-
-panel.querySelector('[data-action=reset]').addEventListener('click', () => {
-  if (currentTargetTab === 'front') {
-    Object.assign(debugFront, { posX: 0.000, posY: 0.200, posZ: 0.000, rotX: -1.310, rotY: 3.140, rotZ: -1.590, scale: 4.200 });
-  } else {
-    Object.assign(debugBack, { posX: 0.000, posY: 0.270, posZ: 1.520, rotX: 1.630, rotY: -1.460, rotZ: 1.550, scale: 4.200 });
-  }
-  updatePanelUI();
-});
-
-panel.querySelector('[data-action=copy]').addEventListener('click', (e) => {
-  const t = `// Frente (Carrusel)\ndebugFront = { posX:${debugFront.posX.toFixed(3)}, posY:${debugFront.posY.toFixed(3)}, posZ:${debugFront.posZ.toFixed(3)}, rotX:${debugFront.rotX.toFixed(3)}, rotY:${debugFront.rotY.toFixed(3)}, rotZ:${debugFront.rotZ.toFixed(3)}, scale:${debugFront.scale.toFixed(3)} };\n\n// Detalle (Atrás)\ndebugBack = { posX:${debugBack.posX.toFixed(3)}, posY:${debugBack.posY.toFixed(3)}, posZ:${debugBack.posZ.toFixed(3)}, rotX:${debugBack.rotX.toFixed(3)}, rotY:${debugBack.rotY.toFixed(3)}, rotZ:${debugBack.rotZ.toFixed(3)}, scale:${debugBack.scale.toFixed(3)} };`;
-  navigator.clipboard.writeText(t);
-  const btn = e.target;
-  const oldText = btn.textContent;
-  btn.textContent = '✓ Copiado';
-  setTimeout(() => (btn.textContent = oldText), 1500);
-});
-// #endregion DEBUG GUI
