@@ -82,7 +82,7 @@
 <!-- NAVBAR -->
 <div class="navbar"><div class="navbar_content"><div class="scroll_component"><div class="scroll_wrapper"><div class="scroll_indicator"><div class="scroll_indicator__core"></div><div class="scroll_indicator__mid"></div><div class="scroll_indicator__halo"></div><div class="scroll_indicator__hotspot"></div></div></div></div><div class="navbar_container"><div class="navbar_sound-wrapper"><div class="navbar_sound"><div>ON</div><div><div class="icon-embed-xsmall w-embed"><svg width="100%" height="100%" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="2" height="8" rx="1" fill="currentColor"/><rect x="4" width="2" height="8" rx="1" fill="currentColor"/><rect x="8" width="2" height="8" rx="1" fill="currentColor"/><rect x="12" width="2" height="8" rx="1" fill="currentColor"/></svg></div></div></div></div><a href="/" class="navbar_logo-link w-nav-brand w--current"><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.5rem;letter-spacing:-0.03em;color:#fff">Grips</div></a><div class="navbar_menu-wrapper"><div class="navbar_relative"><div class="navbar_menu-button"><div class="navbar_menu-button-wrapper"><div><div class="icon-embed-tiny w-embed"><svg width="100%" height="100%" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"><circle fill="currentColor" cx="1" cy="1" r="1"/><circle fill="currentColor" cx="7" cy="1" r="1"/><circle fill="currentColor" cx="7" cy="7" r="1"/><circle fill="currentColor" cx="1" cy="7" r="1"/><circle class="navbar_menu-circle-closed" fill="currentColor" cx="4" cy="4" r="1"/></svg></div></div><div class="text-block">MENÚ</div></div></div><div class="navbar_menu"><div class="navbar_link-list"><a href="#gamme" class="navbar_link">Sabores</a><a href="#benefits-1" class="navbar_link">Beneficios</a><a href="#FAQ" class="navbar_link">FAQ</a><a href="#newsletter" class="navbar_link">Newsletter</a></div><div class="navbar_middle"></div><div class="navbar_bottom"><div class="navbar_button"><a href="mailto:contact@grips.com" class="button is-full w-inline-block"><div>Contacto</div></a></div><div class="navbar_socials-links"><a href="https://www.tiktok.com/@grips" target="_blank" class="button is-secondary">TikTok</a><div class="text-size-tiny">© 2026 GRIPS</div><a href="https://www.instagram.com/grips" target="_blank" class="button is-secondary">Instagram</a></div></div></div></div><a href="mailto:contact@grips.com" class="button is-small hide-tablet w-inline-block"><div>Contacto</div></a></div></div></div><div class="navbar_overlay"></div></div>
 
-<!-- LOADER / INTRO (sin panel HUD) -->
+<!-- LOADER / INTRO -->
 <div class="loader" id="grips-intro">
   <div class="intro_content">
     <span class="intro_eyebrow">Grips · Proteína de grillo</span>
@@ -148,6 +148,12 @@
 <div class="carousel_title-bis-wrapper"><div class="carousel_title-bis-collection w-dyn-list"><div role="list" class="carousel_list is-desc w-dyn-items"><div role="listitem" class="carousel_title-b w-dyn-item"><div data-anim="chars-mask">Almendra</div><div data-anim="chars-mask">& Cacao</div></div><div role="listitem" class="carousel_title-b w-dyn-item"><div data-anim="chars-mask">Cacao</div><div data-anim="chars-mask">Nibs</div></div></div></div></div>
 
 </main>
+
+<!-- GSAP PRIMERO: Para que threejs.js lo encuentre inmediatamente -->
+<script src="https://cdn.prod.website-files.com/gsap/3.15.0/gsap.min.js"></script>
+<script src="https://cdn.prod.website-files.com/gsap/3.15.0/ScrollTrigger.min.js"></script>
+<script src="https://cdn.prod.website-files.com/gsap/3.15.0/SplitText.min.js"></script>
+<script>gsap.registerPlugin(ScrollTrigger,SplitText);</script>
 
 <!-- THREE.JS -->
 <div class="script---threejs w-embed w-script"><script type="module" src="./threejs.js"></script></div>
@@ -512,13 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script></div>
 
-<!-- GSAP con defer (no bloquean el parseo) -->
-<script defer src="https://cdn.prod.website-files.com/gsap/3.15.0/gsap.min.js"></script>
-<script defer src="https://cdn.prod.website-files.com/gsap/3.15.0/ScrollTrigger.min.js"></script>
-<script defer src="https://cdn.prod.website-files.com/gsap/3.15.0/SplitText.min.js"></script>
-<script defer>gsap.registerPlugin(ScrollTrigger,SplitText);</script>
-
-<script id="grips-topics-js" defer>
+<script id="grips-topics-js">
 (function(){
   if(!window.gsap||!window.ScrollTrigger)return;
 
